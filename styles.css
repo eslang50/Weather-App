@@ -91,33 +91,32 @@ h1 {
   display: flex;
   gap: 6px;
   align-items: center;
+  justify-content: center;
 }
 
 .icon.cloud {
   background-image: url('./icons/cloud.svg');
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
+  
 }
 
 .icon.rain {
   background-image: url('./icons/rainy.svg');
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
 }
 
 .icon.snow {
   background-image: url('./icons/snowy.svg');
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
 }
 
 .icon.thunderstorm {
   background-image: url('./icons/thunderstorm.svg');
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
 }
 
-#current-condition {
-  
-}
 

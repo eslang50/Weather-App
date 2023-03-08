@@ -6,6 +6,7 @@ const current = document.getElementById('current-temp')
 const highLow = document.getElementById('highLow-temp')
 const currentCondition = document.querySelector('.weather').querySelector('.icon')
 
+
 const forecastDays = [  
   { header: document.getElementById('day1').querySelector('header'), 
     temp: document.getElementById('day1').querySelector('.container').querySelector('.temp'),

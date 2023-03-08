@@ -1,12 +1,29 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
 }
+
+body {
+  background: url('./images/nature.jpg') no-repeat center center fixed;;
+  background-size: cover;
+}
+
+h1, #current-temp, #highLow-temp, .day {
+  color: #d5f8f8;
+  text-shadow: 2px 2px 0px #000,
+               -1px -1px 0px #000,
+               2px -2px 0px #000,
+               -2px 2px 0px #000;
+}
+
 
 h1 {
   display: flex;
   justify-content: center;
   margin-top: 50px;
+  
 }
 
 .search {
@@ -33,6 +50,7 @@ h1 {
   border: none;
   border: 2px black solid;
   padding: 5px;
+  background-color: #e2f8f8;
 }
 
 .weather {
@@ -44,7 +62,7 @@ h1 {
 }
 
 #current-temp {
-  font-size: 36px;
+  font-size: 45px;
   font-weight: bold;
 }
 
@@ -52,21 +70,54 @@ h1 {
   display: grid;
   margin-top: 50px;
   gap: 15px;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-content: center ;
 }
 
 .day {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  gap: 60px;
+  justify-content: space-between;
   align-items: center;
 }
 
 .day > header {
-  font-size: 30px;
+  font-size: 36px;
   font-weight: bold;
 }
 
-.day > div {
-  font-size: 20px;
+.container {
+  font-size: 30px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
+
+.icon.cloud {
+  background-image: url('./icons/cloud.svg');
+  width: 50px;
+  height: 50px;
+}
+
+.icon.rain {
+  background-image: url('./icons/rainy.svg');
+  width: 50px;
+  height: 50px;
+}
+
+.icon.snow {
+  background-image: url('./icons/snowy.svg');
+  width: 50px;
+  height: 50px;
+}
+
+.icon.thunderstorm {
+  background-image: url('./icons/thunderstorm.svg');
+  width: 50px;
+  height: 50px;
+}
+
+#current-condition {
+  
+}
+

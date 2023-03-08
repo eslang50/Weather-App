@@ -4,18 +4,30 @@ const searchButton = document.getElementById('search-button')
 const searchInput = document.getElementById('search-weather')
 const current = document.getElementById('current-temp')
 const highLow = document.getElementById('highLow-temp')
+const currentCondition = document.querySelector('.weather').querySelector('.icon')
 
-const day1Header = document.getElementById('day1').querySelector('header')
-const day2Header = document.getElementById('day2').querySelector('header')
-const day3Header = document.getElementById('day3').querySelector('header')
-const day4Header = document.getElementById('day4').querySelector('header')
-const day5Header = document.getElementById('day5').querySelector('header')
-
-const day1Temp = document.getElementById('day1').querySelector('div')
-const day2Temp = document.getElementById('day2').querySelector('div')
-const day3Temp = document.getElementById('day3').querySelector('div')
-const day4Temp = document.getElementById('day4').querySelector('div')
-const day5Temp = document.getElementById('day5').querySelector('div')
+const forecastDays = [  
+  { header: document.getElementById('day1').querySelector('header'), 
+    temp: document.getElementById('day1').querySelector('.container').querySelector('.temp'),
+    icon: document.getElementById('day1').querySelector('.container').querySelector('.icon')
+  },
+  { header: document.getElementById('day2').querySelector('header'), 
+    temp: document.getElementById('day2').querySelector('.container').querySelector('.temp'),
+    icon: document.getElementById('day2').querySelector('.container').querySelector('.icon') 
+  },
+  { header: document.getElementById('day3').querySelector('header'), 
+    temp: document.getElementById('day3').querySelector('.container').querySelector('.temp'),
+    icon: document.getElementById('day3').querySelector('.container').querySelector('.icon')
+  },
+  { header: document.getElementById('day4').querySelector('header'), 
+    temp: document.getElementById('day4').querySelector('.container').querySelector('.temp'),
+    icon: document.getElementById('day4').querySelector('.container').querySelector('.icon')
+  },
+  { header: document.getElementById('day5').querySelector('header'), 
+    temp: document.getElementById('day5').querySelector('.container').querySelector('.temp'),
+    icon: document.getElementById('day5').querySelector('.container').querySelector('.icon') 
+  }
+]
 
 searchButton.addEventListener('click', () => {
   searchWeather(searchInput)
@@ -41,31 +53,20 @@ async function displayWeather(cityName) {
     const lowTemp = dailyData.temp.min
     current.innerHTML = `${converter('Fahrenheit',temperature)}\u00B0`
     highLow.innerHTML = `H:${converter('Fahrenheit',highTemp)}\u00B0 L:${converter('Fahrenheit',lowTemp)}\u00B0`
+    currentCondition.className = 'icon ' + weatherCondition(dailyData.weather[0].main)
+    
 
-    const day1Data = onecallData.daily[1]
-    const day2Data = onecallData.daily[2]
-    const day3Data = onecallData.daily[3]
-    const day4Data = onecallData.daily[4]
-    const day5Data = onecallData.daily[5]
 
-    const day1Day = new Date(1000*day1Data.dt)
-    const day2Day = new Date(1000*day2Data.dt)
-    const day3Day = new Date(1000*day3Data.dt)
-    const day4Day = new Date(1000*day4Data.dt)
-    const day5Day = new Date(1000*day5Data.dt)
-    const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    const daysOfWeek = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
-    day1Header.innerHTML = `${daysOfWeek[day1Day.getDay()]}`
-    day2Header.innerHTML = `${daysOfWeek[day2Day.getDay()]}`
-    day3Header.innerHTML = `${daysOfWeek[day3Day.getDay()]}`
-    day4Header.innerHTML = `${daysOfWeek[day4Day.getDay()]}`
-    day5Header.innerHTML = `${daysOfWeek[day5Day.getDay()]}`
+    for(let i = 0; i < 5; i++) {
+      const dayData = onecallData.daily[i+1]
+      const day = new Date(1000*dayData.dt)
+      forecastDays[i].header.innerHTML = `${daysOfWeek[day.getDay()]}`
+      forecastDays[i].temp.innerHTML = `${converter('Fahrenheit',dayData.temp.day)}\u00B0`
+      forecastDays[i].icon.className = 'icon ' + weatherCondition(dayData.weather[0].main)
+    }
 
-    day1Temp.innerHTML = `${converter('Fahrenheit',day1Data.temp.day)}\u00B0`
-    day2Temp.innerHTML = `${converter('Fahrenheit',day2Data.temp.day)}\u00B0`
-    day3Temp.innerHTML = `${converter('Fahrenheit',day3Data.temp.day)}\u00B0`
-    day4Temp.innerHTML = `${converter('Fahrenheit',day4Data.temp.day)}\u00B0`
-    day5Temp.innerHTML = `${converter('Fahrenheit',day5Data.temp.day)}\u00B0`
   }
   catch(error) {
     console.log(error)
@@ -81,3 +82,17 @@ function converter(type, K) {
   }
 }
 
+function weatherCondition(condition) {
+  if(condition === 'Thunderstorm') {
+    return 'thunderstorm'
+  }
+  else if(condition === 'Snow') {
+    return 'snow'
+  }
+  else if(condition === 'Drizzle' || condition === 'Rain') {
+    return 'rain'
+  }
+  else {
+    return 'cloud'
+  }
+}

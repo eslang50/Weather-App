@@ -5,7 +5,8 @@ const searchInput = document.getElementById('search-weather')
 const current = document.getElementById('current-temp')
 const highLow = document.getElementById('highLow-temp')
 const currentCondition = document.querySelector('.weather').querySelector('.icon')
-
+const unitButton = document.getElementById('toggle')
+let toggled = true;
 
 const forecastDays = [  
   { header: document.getElementById('day1').querySelector('header'), 
@@ -31,15 +32,26 @@ const forecastDays = [
 ]
 
 searchButton.addEventListener('click', () => {
-  searchWeather(searchInput)
+  if(toggled)
+    searchWeather(searchInput, 'Fahrenheit')
+  else
+    searchWeather(searchInput, 'Celsius')
 })
 
-async function searchWeather(input) {
+unitButton.addEventListener('click', () => {
+  toggled = !toggled
+  if(toggled)
+    searchWeather(searchInput, 'Fahrenheit')
+  else
+    searchWeather(searchInput, 'Celsius')
+})
+
+async function searchWeather(input, unit) {
   const inputValue = input.value
-  displayWeather(inputValue)
+  displayWeather(inputValue, unit)
 }
 
-async function displayWeather(cityName) {
+async function displayWeather(cityName, unit) {
   try {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${key}`)
     const data = await response.json()
@@ -52,19 +64,17 @@ async function displayWeather(cityName) {
     const dailyData = onecallData.daily[0];
     const highTemp = dailyData.temp.max
     const lowTemp = dailyData.temp.min
-    current.innerHTML = `${converter('Fahrenheit',temperature)}\u00B0`
-    highLow.innerHTML = `H:${converter('Fahrenheit',highTemp)}\u00B0 L:${converter('Fahrenheit',lowTemp)}\u00B0`
+    current.innerHTML = `${converter(unit,temperature)}\u00B0`
+    highLow.innerHTML = `H:${converter(unit,highTemp)}\u00B0 L:${converter(unit,lowTemp)}\u00B0`
     currentCondition.className = 'icon ' + weatherCondition(dailyData.weather[0].main)
     
-
-
     const daysOfWeek = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
     for(let i = 0; i < 5; i++) {
       const dayData = onecallData.daily[i+1]
       const day = new Date(1000*dayData.dt)
       forecastDays[i].header.innerHTML = `${daysOfWeek[day.getDay()]}`
-      forecastDays[i].temp.innerHTML = `${converter('Fahrenheit',dayData.temp.day)}\u00B0`
+      forecastDays[i].temp.innerHTML = `${converter(unit,dayData.temp.day)}\u00B0`
       forecastDays[i].icon.className = 'icon ' + weatherCondition(dayData.weather[0].main)
     }
 
@@ -97,3 +107,6 @@ function weatherCondition(condition) {
     return 'cloud'
   }
 }
+
+
+

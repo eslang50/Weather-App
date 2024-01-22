@@ -1,4 +1,4 @@
-const key = config.API_KEY
+const key = API_KEY;
 
 const searchButton = document.getElementById('search-button')
 const searchInput = document.getElementById('search-weather')

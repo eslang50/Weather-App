@@ -6,6 +6,9 @@ const current = document.getElementById('current-temp')
 const highLow = document.getElementById('highLow-temp')
 const currentCondition = document.querySelector('.weather').querySelector('.icon')
 const unitButton = document.getElementById('toggle')
+const suggestionsList = document.getElementById('suggestions');
+const cityHeader = document.getElementById('city-name')
+
 let toggled = true;
 
 const forecastDays = [  
@@ -31,13 +34,20 @@ const forecastDays = [
   }
 ]
 
-searchButton.addEventListener('click', () => {
+function handleSearch() {
   if(toggled)
-    searchWeather(searchInput, 'Fahrenheit')
+    searchWeather(searchInput, 'Fahrenheit');
   else
-    searchWeather(searchInput, 'Celsius')
-})
+    searchWeather(searchInput, 'Celsius');
+}
 
+searchButton.addEventListener('click', handleSearch);
+
+searchInput.addEventListener('keydown', (event) => {
+  if(event.key === 'Enter') {
+    handleSearch();
+  }
+});
 unitButton.addEventListener('click', () => {
   toggled = !toggled
   if(toggled)
@@ -60,10 +70,10 @@ async function displayWeather(cityName, unit) {
     const lon = data.coord.lon;
     const onecallResponse = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=${key}`);
     const onecallData = await onecallResponse.json();
-    console.log(onecallData)
     const dailyData = onecallData.daily[0];
     const highTemp = dailyData.temp.max
     const lowTemp = dailyData.temp.min
+    cityHeader.innerHTML = `${cityName}`
     current.innerHTML = `${converter(unit,temperature)}\u00B0`
     highLow.innerHTML = `H:${converter(unit,highTemp)}\u00B0 L:${converter(unit,lowTemp)}\u00B0`
     currentCondition.className = 'icon ' + weatherCondition(dailyData.weather[0].main)
@@ -107,6 +117,49 @@ function weatherCondition(condition) {
     return 'cloud'
   }
 }
+
+searchInput.addEventListener('input', async () => {
+  const query = searchInput.value;
+
+  if (query.length > 2) { 
+      const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${key}`);
+      const cities = await response.json();
+
+      suggestionsList.innerHTML = '';
+
+      const uniqueCities = new Set();
+
+      if (cities.length > 0) {
+          cities.forEach(city => {
+              const cityIdentifier = `${city.name}, ${city.country}`;
+
+              if (!uniqueCities.has(cityIdentifier)) {
+                  uniqueCities.add(cityIdentifier);
+                  const div = document.createElement('div');
+                  div.textContent = cityIdentifier;
+                  div.addEventListener('click', () => {
+                      searchInput.value = cityIdentifier;
+                      suggestionsList.innerHTML = '';
+                      suggestionsList.style.display = 'none';
+                      handleSearch(); 
+                  });
+                  suggestionsList.appendChild(div);
+              }
+          });
+          suggestionsList.style.display = 'block';
+      } else {
+          suggestionsList.style.display = 'none';
+      }
+  } else {
+      suggestionsList.style.display = 'none';
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (!suggestionsList.contains(e.target) && e.target !== searchInput) {
+      suggestionsList.style.display = 'none';
+  }
+});
 
 
 

@@ -15,11 +15,15 @@
     <div class="background">
         <h1>Weather</h1>
         <div class="search">
-            <input type="text" id="search-weather" placeholder="City...">
+            <div class="search-container">
+                <input type="text" id="search-weather" placeholder="City..." autocomplete="off">
+                <div id="suggestions" class="suggestions-list"></div>
+            </div>
             <i style="background-color: #e2f8f8;" class="fa-solid fa-magnifying-glass" id="search-button"></i>
             <button id="toggle">F - C</button>
         </div>
         <div class="weather">
+            <h2 id="city-name"></h2>
             <div class="container">
                 <div id="current-temp"></div>
                 <div id="current-condition"class="icon"></div>
